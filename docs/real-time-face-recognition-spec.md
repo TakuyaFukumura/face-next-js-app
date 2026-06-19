@@ -20,7 +20,7 @@
 
 - 顔検出、表情推定、年齢推定、性別推定を同一ライブラリ系で扱いやすい
 - `<video>` と `<canvas>` を組み合わせたブラウザ完結の実装事例が多い
-- MediaPipe は顔検出や顔ランドマークには強いが、**年齢・性別推定は標準機能として揃っていない** ため、別モデルの追加設計が必要になりやすい
+- MediaPipe は顔検出や顔ランドマークには強いが、**少なくとも 2025 年初頭時点で一般的な構成では年齢・性別推定を単独で完結しにくい** ため、別モデルの追加設計が必要になりやすい
 - 「まず動くものを実装したい」という観点では、要件充足までの実装負荷を抑えやすい
 
 #### 補足
@@ -113,7 +113,7 @@
 
 ### 3.1 パフォーマンス
 
-- 初回モデルロード完了の目安: 良好な通信環境で 3〜10 秒以内を目標とする
+- 初回モデルロード完了の目安: `TinyFaceDetector` + 表情推定 + 年齢/性別推定モデルを読み込む前提で、良好な通信環境では 3〜10 秒以内を目標とする
 - 通常動作時の体感更新頻度: 2〜5 FPS 以上の推論更新を目標とする
 - UI 操作やスクロールを阻害しないよう、推論ループは過負荷時に間引き可能とする
 - モバイル端末では発熱や電池消費を考慮し、推論頻度の調整余地を持たせる
@@ -221,10 +221,12 @@ src/
 public/
 └── models/
     └── face-api/
-        ├── tiny_face_detector_model-*.json
-        ├── face_expression_model-*.json
-        ├── age_gender_model-*.json
-        └── *.bin
+        ├── tiny_face_detector_model-weights_manifest.json
+        ├── tiny_face_detector_model-shard1
+        ├── face_expression_model-weights_manifest.json
+        ├── face_expression_model-shard1
+        ├── age_gender_model-weights_manifest.json
+        └── age_gender_model-shard1
 
 docs/
 └── real-time-face-recognition-spec.md
