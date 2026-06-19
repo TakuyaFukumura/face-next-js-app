@@ -221,12 +221,9 @@ src/
 public/
 └── models/
     └── face-api/
-        ├── tiny_face_detector_model-weights_manifest.json
-        ├── tiny_face_detector_model-shard*
-        ├── face_expression_model-weights_manifest.json
-        ├── face_expression_model-shard*
-        ├── age_gender_model-weights_manifest.json
-        └── age_gender_model-shard*
+        ├── <tiny face detector model assets>
+        ├── <face expression model assets>
+        └── <age gender model assets>
 
 docs/
 └── real-time-face-recognition-spec.md
@@ -254,6 +251,7 @@ docs/
   - 枠線とラベル描画ユーティリティ
 - `public/models/face-api/`
   - face-api.js 配布物に含まれる manifest JSON と shard ファイル群をそのまま配置する
+  - 正確なファイル名は利用する配布物に合わせ、実際にダウンロードしたモデル一式と一致させる
 
 ## 6. 実装に向けたステップ（ロードマップ）
 
