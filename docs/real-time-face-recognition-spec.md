@@ -222,11 +222,11 @@ public/
 └── models/
     └── face-api/
         ├── tiny_face_detector_model-weights_manifest.json
-        ├── tiny_face_detector_model-shard1
+        ├── tiny_face_detector_model-shard*
         ├── face_expression_model-weights_manifest.json
-        ├── face_expression_model-shard1
+        ├── face_expression_model-shard*
         ├── age_gender_model-weights_manifest.json
-        └── age_gender_model-shard1
+        └── age_gender_model-shard*
 
 docs/
 └── real-time-face-recognition-spec.md
@@ -252,6 +252,8 @@ docs/
   - 推論ループと検出結果管理
 - `drawDetections.ts`
   - 枠線とラベル描画ユーティリティ
+- `public/models/face-api/`
+  - face-api.js 配布物に含まれる manifest JSON と shard ファイル群をそのまま配置する
 
 ## 6. 実装に向けたステップ（ロードマップ）
 
