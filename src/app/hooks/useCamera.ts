@@ -46,6 +46,10 @@ export function useCamera(): UseCameraReturn {
             return;
         }
 
+        if (streamRef.current) {
+            return;
+        }
+
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: {facingMode: 'user'},

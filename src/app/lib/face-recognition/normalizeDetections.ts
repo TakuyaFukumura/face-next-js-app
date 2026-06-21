@@ -1,5 +1,5 @@
 import * as faceapi from 'face-api.js';
-import type {NormalizedDetection} from './types';
+import type {Gender, NormalizedDetection} from './types';
 
 type FullDetection = faceapi.WithAge<
     faceapi.WithGender<
@@ -28,12 +28,14 @@ export function normalizeDetections(
             expressionEntries[0],
         );
 
+        const gender: Gender = d.gender === 'male' ? 'male' : 'female';
+
         return {
             box: {x, y, width, height},
             expression,
             expressionScore,
             age: d.age,
-            gender: d.gender,
+            gender,
             genderProbability: d.genderProbability,
         };
     });

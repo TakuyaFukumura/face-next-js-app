@@ -11,6 +11,9 @@ export type AppStatus =
     | 'analyzing'
     | 'noFace';
 
+/** 推定性別 */
+export type Gender = 'male' | 'female';
+
 /** 正規化された検出結果（1人分） */
 export interface NormalizedDetection {
     /** 顔のバウンディングボックス (ピクセル座標, 映像の実サイズ基準) */
@@ -27,7 +30,7 @@ export interface NormalizedDetection {
     /** 推定年齢 */
     age: number;
     /** 推定性別 ('male' | 'female') */
-    gender: string;
+    gender: Gender;
     /** 性別推定の確率スコア (0〜1) */
     genderProbability: number;
 }

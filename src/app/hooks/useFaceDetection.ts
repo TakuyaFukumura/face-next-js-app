@@ -41,40 +41,48 @@ export function useFaceDetection({
             return;
         }
 
-        const results = await faceapi
-            .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions({scoreThreshold: DETECTION_SCORE_THRESHOLD}))
-            .withFaceExpressions()
-            .withAgeAndGender();
+        try {
+            const results = await faceapi
+                .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions({scoreThreshold: DETECTION_SCORE_THRESHOLD}))
+                .withFaceExpressions()
+                .withAgeAndGender();
 
-        const normalized = normalizeDetections(results);
-        setDetections(normalized);
+            const normalized = normalizeDetections(results);
+            setDetections(normalized);
 
-        // canvas サイズを CSS 表示サイズに同期
-        if (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight) {
-            canvas.width = canvas.clientWidth;
-            canvas.height = canvas.clientHeight;
-        }
+            // canvas サイズを CSS 表示サイズに同期
+            if (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight) {
+                canvas.width = canvas.clientWidth;
+                canvas.height = canvas.clientHeight;
+            }
 
-        // 前フレームを消去してから再描画
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
+            // 前フレームを消去してから再描画
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
 
-        if (normalized.length > 0) {
-            drawDetections(canvas, normalized, video.videoWidth, video.videoHeight);
+            if (normalized.length > 0) {
+                drawDetections(canvas, normalized, video.videoWidth, video.videoHeight);
+            }
+        } catch {
+            setDetections([]);
         }
     }, [videoRef, canvasRef]);
 
     useEffect(() => {
         if (!enabled) {
+            const clearDetectionsTimer = setTimeout(() => {
+                setDetections([]);
+            }, 0);
+
             // 推論停止時にオーバーレイを消す
             const canvas = canvasRef.current;
             if (canvas) {
                 const ctx = canvas.getContext('2d');
                 ctx?.clearRect(0, 0, canvas.width, canvas.height);
             }
-            return;
+            return () => clearTimeout(clearDetectionsTimer);
         }
 
         runningRef.current = true;

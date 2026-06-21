@@ -11,7 +11,7 @@ import {normalizeDetections} from '@/app/lib/face-recognition/normalizeDetection
 jest.mock('face-api.js', () => ({}));
 
 describe('normalizeDetections', () => {
-    const makeDetection = (overrides?: Partial<{age: number; gender: string; genderProbability: number}>) => ({
+    const makeDetection = (overrides?: Partial<{age: number; gender: 'male' | 'female'; genderProbability: number}>) => ({
         detection: {
             box: {x: 10, y: 20, width: 100, height: 120},
         },

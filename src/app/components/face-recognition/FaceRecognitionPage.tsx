@@ -52,11 +52,11 @@ export default function FaceRecognitionPage() {
     // アプリ状態の導出
     const appStatus: AppStatus = (() => {
         if (modelError) return 'modelError';
-        if (modelsLoading) return 'loadingModels';
         if (cameraError) {
             if (cameraError.includes('許可されていません')) return 'permissionDenied';
             return 'cameraError';
         }
+        if (modelsLoading) return 'loadingModels';
         if (!isStreaming) return 'startingCamera';
         if (detections.length === 0) return 'noFace';
         return 'analyzing';
