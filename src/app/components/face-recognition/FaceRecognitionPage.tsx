@@ -19,7 +19,7 @@ export default function FaceRecognitionPage() {
     const [containerSize, setContainerSize] = useState<{width: number; height: number}>();
 
     const {modelsLoaded, modelsLoading, modelError} = useFaceApiModels();
-    const {videoRef, isStreaming, cameraError, startCamera} = useCamera();
+    const {videoRef, isStreaming, cameraError, cameraErrorType, startCamera} = useCamera();
     const {detections} = useFaceDetection({
         enabled: modelsLoaded && isStreaming,
         videoRef,
@@ -53,7 +53,7 @@ export default function FaceRecognitionPage() {
     const appStatus: AppStatus = (() => {
         if (modelError) return 'modelError';
         if (cameraError) {
-            if (cameraError.includes('許可されていません')) return 'permissionDenied';
+            if (cameraErrorType === 'permissionDenied') return 'permissionDenied';
             return 'cameraError';
         }
         if (modelsLoading) return 'loadingModels';

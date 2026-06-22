@@ -2,6 +2,8 @@
 
 import {useCallback, useEffect, useRef, useState} from 'react';
 
+type CameraErrorType = 'permissionDenied' | 'notFound' | 'unsupported' | 'unknown';
+
 interface UseCameraReturn {
     /** カメラ映像を表示する video 要素への ref */
     videoRef: React.RefObject<HTMLVideoElement | null>;
@@ -9,6 +11,8 @@ interface UseCameraReturn {
     isStreaming: boolean;
     /** カメラ取得時のエラーメッセージ。エラーなしの場合は null */
     cameraError: string | null;
+    /** カメラエラーの種別。エラーなしの場合は null */
+    cameraErrorType: CameraErrorType | null;
     /** カメラを起動する */
     startCamera: () => Promise<void>;
     /** カメラを停止する */
@@ -24,6 +28,7 @@ export function useCamera(): UseCameraReturn {
     const streamRef = useRef<MediaStream | null>(null);
     const [isStreaming, setIsStreaming] = useState(false);
     const [cameraError, setCameraError] = useState<string | null>(null);
+    const [cameraErrorType, setCameraErrorType] = useState<CameraErrorType | null>(null);
 
     const stopCamera = useCallback(() => {
         if (streamRef.current) {
@@ -38,11 +43,13 @@ export function useCamera(): UseCameraReturn {
 
     const startCamera = useCallback(async () => {
         setCameraError(null);
+        setCameraErrorType(null);
 
         if (!navigator.mediaDevices?.getUserMedia) {
             setCameraError(
                 'このブラウザはカメラに対応していません。Chrome・Edge・Safari の最新版をご利用ください。',
             );
+            setCameraErrorType('unsupported');
             return;
         }
 
@@ -66,10 +73,13 @@ export function useCamera(): UseCameraReturn {
                 setCameraError(
                     'カメラの使用が許可されていません。ブラウザの設定からカメラへのアクセスを許可してから、ページを再読み込みしてください。',
                 );
+                setCameraErrorType('permissionDenied');
             } else if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
                 setCameraError('カメラが見つかりません。カメラが接続されているか確認してください。');
+                setCameraErrorType('notFound');
             } else {
                 setCameraError(`カメラの起動に失敗しました: ${error.message}`);
+                setCameraErrorType('unknown');
             }
         }
     }, []);
@@ -93,5 +103,5 @@ export function useCamera(): UseCameraReturn {
         };
     }, [stopCamera]);
 
-    return {videoRef, isStreaming, cameraError, startCamera, stopCamera};
+    return {videoRef, isStreaming, cameraError, cameraErrorType, startCamera, stopCamera};
 }

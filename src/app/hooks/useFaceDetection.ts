@@ -47,6 +47,9 @@ export function useFaceDetection({
                 .withFaceExpressions()
                 .withAgeAndGender();
 
+            // await 中にアンマウント/無効化された場合は state 更新・描画をスキップ
+            if (!runningRef.current) return;
+
             const normalized = normalizeDetections(results);
             setDetections(normalized);
 
